@@ -1,0 +1,36 @@
+options:
+	ChatSend: &6[Moi] &7>> &6[%arg 1%] &7: &8&o%arg 2% 
+	ChatRecevoir: &6[%sender%] &7>> &6[Moi] &7: &8&o%arg 2% 
+	ChatSenda: &6[Moi] &7>> &6[%{rep.%player%}%] &7: &8&o%arg 1%
+	ChatRecevoira: &6[%sender%] &7>> &6[Moi] &7: &8&o%arg 1% 
+command /msg [<player>] [<text>]:
+	trigger:
+		if arg 1 is not set:
+			message "&cIl faut mettre un pseudo"
+		If arg 1 is set:
+			if arg 2 is not set:
+				message "&cTu dois mettre un message"
+			if arg 2 is set:
+				send "{@ChatSend}" to player
+				send "{@ChatRecevoir}" to arg 1
+				set {rep.%arg 1%} to player
+			
+command /r [<text>]:
+	trigger:
+		if arg 1 is not set:
+			message "&cTu dois mettre un message"
+		if arg 1 is set:
+			if {rep.%player%} is set:
+				send "{@ChatSenda}" to player
+				send "{@ChatRecevoira}" to {rep.%player%}
+				set {rep.%{rep.%player%}%} to player
+			if {rep.%player%} is not set:
+				message "&cTu n'as personne à qui repondre"
+on quit:
+	delete {rep.%player%}
+	
+on command "/m [<player>] [<text>]":
+	execute player command "command /msg [<player>] [<text>]:"
+
+on command "/w [<player>] [<text>]":
+	execute player command "command /msg [<player>] [<text>]:"
